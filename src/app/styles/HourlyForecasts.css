@@ -1,0 +1,103 @@
+.hourly-forecasts {
+    background-color: hsl(243, 27%, 20%);
+    width: 20rem;
+    padding: 1rem;
+    border-radius: 0.7rem;
+    color: #d4d3d9;
+}
+
+.hourly-forecasts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.days-dropdown {
+    position: relative;
+}
+
+.forecasts-dropdown-button {
+    background-color: #3c3b5e;
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    width: 5.5rem;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.forecasts-dropdown-button img {
+    margin-left: 0.4rem;
+    width: 10px;
+    transition: transform 0.3s ease;
+}
+
+.forecasts-dropdown-button.open img {
+    transform: rotate(180deg);
+}
+
+.days-dropdown-contents {
+    background-color: hsl(243, 27%, 20%);
+    width: 10rem;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border-radius: 0.3rem;
+    border: 1px solid #2c2c4d;
+    position: absolute;
+    right: 0;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-out;
+    transform-origin: top;
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+}
+
+.days-dropdown-contents.closing {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(0.8);
+}
+
+.days-dropdown-contents button {
+    display: block;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 0.3rem;
+    color: #d4d3d9;
+    cursor: pointer;
+    border-radius: 0.2rem;
+    transition: background-color 0.2s ease;
+}
+
+.days-dropdown-contents button:hover {
+    background-color: #4a4968;
+}
+
+.days-dropdown-contents button:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+.forecasts-day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #302f4a;
+    margin-top: 0.5rem;
+    padding-right: 0.3rem;
+    border-radius: 0.5rem;
+}
+
+/* .forecasts-day:not(:last-child) {
+    
+} */
+
+.forecasts-day div {
+    display: flex;
+    align-items: center;
+}
+
+.forecasts-day img {
+    width: 40px;
+}

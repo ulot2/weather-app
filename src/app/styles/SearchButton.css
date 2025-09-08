@@ -1,11 +1,11 @@
 .search-container {
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 0.1rem;
 }
 
 .search-container h1 {
     color: #fff;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .search-input {

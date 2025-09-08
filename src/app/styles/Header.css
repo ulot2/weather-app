@@ -16,6 +16,10 @@
     transition: background-color 0.3s ease;
 }
 
+.units-dropdown-button:hover {
+  background-color: hsl(243, 27%, 30%);
+}
+
 .units-dropdown-button img:last-child {
   transition: transform 0.3s ease;
 }
@@ -24,22 +28,18 @@
   transform: rotate(180deg);
 }
 
-.units-dropdown-button:hover {
-  background-color: hsl(243, 27%, 30%);
-}
-
 .units-dropdown-content {
   position: absolute;
   background-color: hsl(243, 27%, 20%);
+  right: 150;
   border-radius: 0.6rem;
   margin-top: 0.5rem;
-  right: 156;
   padding-top: 0.6rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  z-index: 1000;
   width: 10rem;
-  transform-origin: top;
   transition: all 0.3s ease-out;
+  transform-origin: top;
   opacity: 1;
   transform: translateY(0) scaleY(1);
 }
@@ -49,22 +49,11 @@
   transform: translateY(-10px) scaleY(0.8);
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scaleY(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-}
-
 .units-dropdown-content button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0.3rem auto;
+  margin: 0 auto;
   width: 90%;
   font-size: 0.7rem;
   padding: 0.5rem 0.5rem;
@@ -83,7 +72,6 @@
 
 .units-dropdown-content button.selected {
   background-color: hsl(243, 23%, 24%); 
-  border-radius: 0.4rem;
 }
 
 .units-dropdown-content div {
