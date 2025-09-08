@@ -1,0 +1,6 @@
+.weather-report {
+    display: flex;
+    justify-content: flex-start;
+    gap: 4%;
+    margin-top: 2rem;
+}

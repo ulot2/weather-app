@@ -63,7 +63,7 @@ export const Header = () => {
   };
 
   const handleUnitSelection = (categoryId: string, optionValue: string) => {
-    setSelectedUnits(prev => ({
+    setSelectedUnits((prev) => ({
       ...prev,
       [categoryId]: optionValue,
     }));
@@ -93,40 +93,46 @@ export const Header = () => {
           <span>Units</span>
           <img src="/images/icon-dropdown.svg" alt="" />
         </div>
-          {isUnitsDropdownOpen && (
-            <div
-              className={`units-dropdown-content ${isAnimating ? "closing" : ""}`}
-            >
-              <button type="button" onClick={switchToImperial}>
-                Switch to Imperial
-              </button>
-              {unitCategories.map((category, index) => (
-                <React.Fragment key={category.id}>
-                  <div>
-                    <p>{category.name}</p>
-                    {category.options.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => handleUnitSelection(category.id, option.value)}
-                        className={
-                          selectedUnits[category.id as keyof typeof selectedUnits] === option.value
-                            ? "selected"
-                            : ""
-                        }
-                      >
-                        {option.label}{" "}
-                        {selectedUnits[category.id as keyof typeof selectedUnits] === option.value && (
-                          <img src="/images/icon-checkmark.svg" alt="" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                  {index < unitCategories.length - 1 && <hr />}
-                </React.Fragment>
-              ))}
-            </div>
-          )}
+        {isUnitsDropdownOpen && (
+          <div
+            className={`units-dropdown-content ${isAnimating ? "closing" : ""}`}
+          >
+            <button type="button" onClick={switchToImperial}>
+              Switch to Imperial
+            </button>
+            {unitCategories.map((category, index) => (
+              <React.Fragment key={category.id}>
+                <div>
+                  <p>{category.name}</p>
+                  {category.options.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() =>
+                        handleUnitSelection(category.id, option.value)
+                      }
+                      className={
+                        selectedUnits[
+                          category.id as keyof typeof selectedUnits
+                        ] === option.value
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      {option.label}{" "}
+                      {selectedUnits[
+                        category.id as keyof typeof selectedUnits
+                      ] === option.value && (
+                        <img src="/images/icon-checkmark.svg" alt="" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+                {index < unitCategories.length - 1 && <hr />}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
