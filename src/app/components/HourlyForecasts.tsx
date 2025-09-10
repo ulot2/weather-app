@@ -50,12 +50,12 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
   };
   const defaultForecasts: HourlyForecastItem[] = [
     { id: "1", time: "3 PM", iconSrc: "/images/icon-overcast.webp", temperature: "20°" },
-    { id: "2", time: "4 PM", iconSrc: "/images/icon-overcast.webp", temperature: "21°" },
-    { id: "3", time: "5 PM", iconSrc: "/images/icon-overcast.webp", temperature: "19°" },
-    { id: "4", time: "6 PM", iconSrc: "/images/icon-overcast.webp", temperature: "18°" },
-    { id: "5", time: "7 PM", iconSrc: "/images/icon-overcast.webp", temperature: "17°" },
-    { id: "6", time: "8 PM", iconSrc: "/images/icon-overcast.webp", temperature: "16°" },
-    { id: "7", time: "9 PM", iconSrc: "/images/icon-overcast.webp", temperature: "15°" },
+    { id: "2", time: "4 PM", iconSrc: "/images/icon-sunny.webp", temperature: "21°" },
+    { id: "3", time: "5 PM", iconSrc: "/images/icon-partly-cloudy.webp", temperature: "19°" },
+    { id: "4", time: "6 PM", iconSrc: "/images/icon-rain.webp", temperature: "18°" },
+    { id: "5", time: "7 PM", iconSrc: "/images/icon-storm.webp", temperature: "17°" },
+    { id: "6", time: "8 PM", iconSrc: "/images/icon-sunny.webp", temperature: "16°" },
+    { id: "7", time: "9 PM", iconSrc: "/images/icon-snow.webp", temperature: "15°" },
     { id: "8", time: "10 PM", iconSrc: "/images/icon-overcast.webp", temperature: "14°" },
   ];
 

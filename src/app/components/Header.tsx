@@ -44,6 +44,7 @@ const unitCategories: UnitCategory[] = [
 export const Header = () => {
   const [isUnitsDropdownOpen, setIsUnitsDropdownOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
   const [selectedUnits, setSelectedUnits] = useState({
     temperature: "celsius",
     windSpeed: "kmh",
@@ -119,7 +120,7 @@ export const Header = () => {
                           : ""
                       }
                     >
-                      {option.label}{" "}
+                      {option.label}
                       {selectedUnits[
                         category.id as keyof typeof selectedUnits
                       ] === option.value && (
