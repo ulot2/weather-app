@@ -25,7 +25,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
       wind_speed_10m?: number;
       precipitation?: number;
     };
-    // Add other properties if needed
+    
   };
 
   // State for weather data
@@ -78,16 +78,16 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
         id: "precipitation",
         label: "Precipitation",
         value: current.precipitation || 0,
-        unit: "mm",
+        unit: "in",
       },
     ];
   };
 
   const defaultMetrics: Metric[] = [
-    { id: "feelsLike", label: "Feels like", value: 64, unit: "°" },
-    { id: "humidity", label: "Humidity", value: 46, unit: "%" },
-    { id: "wind", label: "Wind", value: 9, unit: "mph" },
-    { id: "precipitation", label: "Precipitation", value: 0, unit: "in" },
+    { id: "feelsLike", label: "Feels like", value: "_", unit: "" },
+    { id: "humidity", label: "Humidity", value: "_", unit: "" },
+    { id: "wind", label: "Wind", value: "_", unit: "" },
+    { id: "precipitation", label: "Precipitation", value: "_", unit: "" },
   ];
 
   //   deciding what metrics to show

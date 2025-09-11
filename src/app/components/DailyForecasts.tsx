@@ -1,5 +1,11 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import "@/app/styles/DailyForecasts.css";
+import {
+  getDailyHourlyForecastData,
+  transformDailyData,
+} from "@/utils/weather";
 
 interface DailyForecastItem {
   id: string;
@@ -14,21 +20,66 @@ interface DailyForecastsProps {
   forecasts?: DailyForecastItem[];
 }
 
-export const DailyForecasts: React.FC<DailyForecastsProps> = ({ 
+export const DailyForecasts: React.FC<DailyForecastsProps> = ({
   title = "Daily forecast",
-  forecasts 
+  forecasts,
 }) => {
+  type WeatherApiResponse = {
+    daily?: {
+      time?: string[];
+      weather_code?: number[];
+      temperature_2m_max?: number[];
+      temperature_2m_min?: number[];
+    };
+  };
+
+  const [dailyForecastData, setDailyForecastData] =
+    useState<WeatherApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<String | null>(null);
+
+  useEffect(() => {
+    const fetchDailyForecastData = async () => {
+      try {
+        setLoading(true);
+        const data = await getDailyHourlyForecastData(52.52, 13.41);
+        setDailyForecastData(data);
+        setError(null);
+      } catch (error) {
+        setError("Failed to fetch data");
+        console.error("Weather fetch error", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDailyForecastData();
+  }, []);
+
   const defaultForecasts: DailyForecastItem[] = [
-    { id: "1", day: "Tue", iconSrc: "/images/icon-rain.webp", highTemp: "68°", lowTemp: "57°" },
-    { id: "2", day: "Wed", iconSrc: "/images/icon-drizzle.webp", highTemp: "68°", lowTemp: "57°" },
-    { id: "3", day: "Thu", iconSrc: "/images/icon-sunny.webp", highTemp: "68°", lowTemp: "57°" },
-    { id: "4", day: "Fri", iconSrc: "/images/icon-partly-cloudy.webp", highTemp: "68°", lowTemp: "57°" },
-    { id: "5", day: "Sat", iconSrc: "/images/icon-storm.webp", highTemp: "68°", lowTemp: "57°" },
-    { id: "6", day: "Sun", iconSrc: "/images/icon-snow.webp", highTemp: "68°", lowTemp: "57°" },
-    { id: "7", day: "Mon", iconSrc: "/images/icon-fog.webp", highTemp: "68°", lowTemp: "57°" },
+    { id: "1", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },
+    { id: "2", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },
+    { id: "3", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },
+    { id: "4", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },
+    { id: "5", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },
+    { id: "6", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },
+    { id: "7", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },
   ];
 
-  const forecastsToRender = forecasts ?? defaultForecasts;
+  let forecastsToRender;
+  if (forecasts) {
+    forecastsToRender = forecasts;
+  } else if (dailyForecastData?.daily && !loading) {
+    const safeDailyData = {
+      time: dailyForecastData.daily.time ?? [],
+      weather_code: dailyForecastData.daily.weather_code ?? [],
+      temperature_2m_max: dailyForecastData.daily.temperature_2m_max ?? [],
+      temperature_2m_min: dailyForecastData.daily.temperature_2m_min ?? [],
+    };
+    forecastsToRender = transformDailyData(safeDailyData);
+  } else {
+    forecastsToRender = defaultForecasts;
+  }
 
   return (
     <div className="daily-forecast-container">
@@ -37,7 +88,7 @@ export const DailyForecasts: React.FC<DailyForecastsProps> = ({
         {forecastsToRender.map((forecast) => (
           <div key={forecast.id}>
             <p>{forecast.day}</p>
-            <img src={forecast.iconSrc} alt="" />
+            <img src={forecast.iconSrc || ""} alt="" />
             <span>{forecast.highTemp}</span> <span>{forecast.lowTemp}</span>
           </div>
         ))}
