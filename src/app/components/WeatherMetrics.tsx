@@ -115,7 +115,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
               ? "..." 
               : weatherData?.current?.temperature_2m 
                 ? `${Math.round(weatherData.current.temperature_2m)}°`
-                : "68°"
+                : "_"
             }</h1>
         </div>
       </div>

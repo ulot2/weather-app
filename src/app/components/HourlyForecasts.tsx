@@ -1,7 +1,8 @@
 "use client"
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/styles/HourlyForecasts.css";
+import { getDailyHourlyForecastData, transformHourlyData } from "@/utils/weather";
+import { time } from "console";
 
 interface HourlyForecastItem {
   id: string;
@@ -21,6 +22,18 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
   selectedDay = "Tuesday",
   forecasts
 }) => {
+  type WeatherApiResponse = {
+    hourly?: {
+      time?: string[];
+      weather_code?: number[];
+      temperature_2m?: number[];
+    };
+  };
+
+  const [hourlyForecastData, setHourlyForecastData] = useState<WeatherApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<String | null>(null);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentSelectedDay, setCurrentSelectedDay] = useState(selectedDay);
@@ -29,12 +42,11 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
 
   const toggleDropdown = () => {
     if (isDropdownOpen) {
-      // Start closing animation
       setIsAnimating(true);
       setTimeout(() => {
         setIsDropdownOpen(false);
         setIsAnimating(false);
-      }, 300); // Match CSS transition duration
+      }, 300);
     } else {
       setIsDropdownOpen(true);
     }
@@ -48,18 +60,63 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
       setIsAnimating(false);
     }, 300);
   };
+
+  useEffect(() => {
+    const getHourlyForecastData = async () => {
+      try {
+        setLoading(true)
+        const data = await getDailyHourlyForecastData(52.52, 13.41);
+        setHourlyForecastData(data)
+        setError(null)
+      } catch (error) {
+        setError('Failed to fetch data');
+        console.error("Weather fetch error", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getHourlyForecastData()
+  }, []);
+
+  const getDateForDay = (dayName: string) => {
+    if (!hourlyForecastData?.hourly?.time) return null;
+
+    const dayIndex = days.indexOf(dayName);
+    return hourlyForecastData.hourly.time[dayIndex];
+  }
+
+  const getHourlyForecasts = () => {
+    if (!hourlyForecastData?.hourly || loading) return null;
+    
+    const selectedDate = getDateForDay(currentSelectedDay);
+    const hourly = hourlyForecastData.hourly;
+    const safeHourly = {
+      time: hourly.time ?? [],
+      weather_code: hourly.weather_code ?? [],
+      temperature_2m: hourly.temperature_2m ?? []
+    };
+    return transformHourlyData(safeHourly, selectedDate);
+  };
+
   const defaultForecasts: HourlyForecastItem[] = [
-    { id: "1", time: "3 PM", iconSrc: "/images/icon-overcast.webp", temperature: "20°" },
-    { id: "2", time: "4 PM", iconSrc: "/images/icon-sunny.webp", temperature: "21°" },
-    { id: "3", time: "5 PM", iconSrc: "/images/icon-partly-cloudy.webp", temperature: "19°" },
-    { id: "4", time: "6 PM", iconSrc: "/images/icon-rain.webp", temperature: "18°" },
-    { id: "5", time: "7 PM", iconSrc: "/images/icon-storm.webp", temperature: "17°" },
-    { id: "6", time: "8 PM", iconSrc: "/images/icon-sunny.webp", temperature: "16°" },
-    { id: "7", time: "9 PM", iconSrc: "/images/icon-snow.webp", temperature: "15°" },
-    { id: "8", time: "10 PM", iconSrc: "/images/icon-overcast.webp", temperature: "14°" },
+    { id: "1", time: "", iconSrc: "#", temperature: "" },
+    { id: "2", time: "", iconSrc: "#", temperature: "" },
+    { id: "3", time: "", iconSrc: "#", temperature: "" },
+    { id: "4", time: "", iconSrc: "#", temperature: "" },
+    { id: "5", time: "", iconSrc: "#", temperature: "" },
+    { id: "6", time: "", iconSrc: "#", temperature: "" },
+    { id: "7", time: "", iconSrc: "#", temperature: "" },
+    { id: "8", time: "", iconSrc: "#", temperature: "" },
   ];
 
-  const forecastsToRender = forecasts ?? defaultForecasts;
+   let forecastsToRender;
+  if (forecasts) {
+    forecastsToRender = forecasts;
+  } else if (hourlyForecastData && !loading) {
+    forecastsToRender = getHourlyForecasts();
+  } else {
+    forecastsToRender = defaultForecasts;
+  }
 
   return (
     <div className="hourly-forecasts">
@@ -85,7 +142,7 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
           )}
         </div>
       </div>
-      {forecastsToRender.map((forecast) => (
+      {forecastsToRender && forecastsToRender.map((forecast) => (
         <div key={forecast.id} className="forecasts-day">
           <div>
             <img src={forecast.iconSrc} alt="" />

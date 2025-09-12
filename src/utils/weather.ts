@@ -5,8 +5,6 @@ export async function getWeatherData(latitude: number, longitude: number) {
         const response = await fetch(url);
         const data = await response.json();
 
-        console.log('Raw API response:', data);
-
         return data;
         
     } catch (error) {
@@ -67,7 +65,6 @@ export function transformDailyData(dailyData: DailyData) {
   if (!dailyData || !dailyData.time) return [];
   
   return dailyData.time.map((date, index) => {
-    // Convert date string to day name
     const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
     
     return {
@@ -78,4 +75,35 @@ export function transformDailyData(dailyData: DailyData) {
       lowTemp: `${Math.round(dailyData.temperature_2m_min[index])}°`
     };
   });
+}
+
+interface HourlyData {
+    time: string[];
+    weather_code: number[];
+    temperature_2m: number[];
+}
+
+export function transformHourlyData(hourlyData: HourlyData, selectedDate: string | null = null) {
+    if (!hourlyData || !hourlyData.time) return [];
+
+    let startIndex = 0;
+    if (selectedDate) {
+        startIndex = hourlyData.time.findIndex(time => time.startsWith(selectedDate));
+        if (startIndex === -1) startIndex = 0;
+    }
+
+    return hourlyData.time.slice(startIndex, startIndex + 8).map((time, index) => {
+        const actualIndex = startIndex + index;
+        const hour = new Date(time).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            hour12: true
+        });
+
+        return {
+            id: (index + 1).toString(),
+            time: hour,
+            iconSrc: `/images/${getWeatherIcon(hourlyData.weather_code[actualIndex])}`,
+            temperature: `${Math.round(hourlyData.temperature_2m[actualIndex])}°`
+        };
+    })
 }
