@@ -1,6 +1,6 @@
 export async function getWeatherData(latitude: number, longitude: number) {
     try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,precipitation&timezone=auto`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&timezone=auto`;
 
         const response = await fetch(url);
         const data = await response.json();
@@ -106,4 +106,22 @@ export function transformHourlyData(hourlyData: HourlyData, selectedDate: string
             temperature: `${Math.round(hourlyData.temperature_2m[actualIndex])}°`
         };
     })
+}
+
+export async function searchCity(cityName: string) {
+    try {
+        const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=5&language=en&format=json`
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        console.log('Geocoding response', data);
+
+        return data.results || [];
+        
+    } catch (error) {
+        console.error('Error searching:', error);
+        throw error;
+        
+    }
 }

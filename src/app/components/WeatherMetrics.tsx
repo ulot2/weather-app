@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import "@/app/styles/WeatherMetrics.css";
-import { getWeatherData } from "@/utils/weather";
+import { getWeatherData, getWeatherIcon } from "@/utils/weather";
+import { searchCity } from "@/utils/weather";
 
 type Metric = {
   id: string;
@@ -24,14 +25,31 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
       relative_humidity_2m?: number;
       wind_speed_10m?: number;
       precipitation?: number;
+      weather_code?: number;
+      time?: string;
     };
-    
   };
 
   // State for weather data
-  const [weatherData, setWeatherData] = useState<WeatherApiResponse | null>(null);
+  const [weatherData, setWeatherData] = useState<WeatherApiResponse | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const testGeocoding = async () => {
+      try {
+        console.log('Testing geocoding...');
+        const results = await searchCity('Paris');
+        console.log('Geocoding results:', results);
+      } catch (error) {
+        console.error('Geocoding error:', error);
+      }
+    };
+    
+    testGeocoding();
+  }, []);
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -95,7 +113,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
   if (metrics) {
     metricsToRender = metrics;
   } else if (weatherData && !loading) {
-    metricsToRender = createMetricsFromAPI(weatherData)
+    metricsToRender = createMetricsFromAPI(weatherData);
   } else {
     metricsToRender = defaultMetrics;
   }
@@ -105,18 +123,45 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
       <div className="general-report">
         <div className="report-details">
           <h3>Berlin, Germany</h3>
-          <p>Tuesday, Aug. 5, 2025</p>
-          {loading && <p style={{fontSize: '0.8rem', marginTop: '0.5rem'}}>Loading...</p>}
-          {error && <p style={{fontSize: '0.8rem', marginTop: '0.5rem', color: 'red'}}>{error}</p>}
+          <p>
+            {weatherData?.current?.time
+              ? new Date(weatherData.current.time).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : "_"}
+          </p>
+          {/* {loading && (
+            <p style={{ fontSize: "0.8rem", marginTop: "0.5rem" }}>
+              Loading...
+            </p>
+          )}
+          {error && (
+            <p
+              style={{ fontSize: "0.8rem", marginTop: "0.5rem", color: "red" }}
+            >
+              {error}
+            </p>
+          )} */}
         </div>
         <div className="weather-degree">
-          <img src="/images/icon-sunny.webp" alt="icon-sunny" />
-          <h1>{loading 
-              ? "..." 
-              : weatherData?.current?.temperature_2m 
-                ? `${Math.round(weatherData.current.temperature_2m)}°`
-                : "_"
-            }</h1>
+          <img
+            src={`/images/${
+              weatherData?.current?.weather_code
+                ? getWeatherIcon(weatherData.current.weather_code)
+                : "icon-sunny.webp"
+            }`}
+            alt="current weather"
+          />
+          <h1>
+            {loading
+              ? "..."
+              : weatherData?.current?.temperature_2m
+              ? `${Math.round(weatherData.current.temperature_2m)}°`
+              : "_"}
+          </h1>
         </div>
       </div>
       <div className="metrics">
