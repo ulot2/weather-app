@@ -8,12 +8,18 @@ type WeatherReportProps = {
   latitude: number;
   longitude: number;
   cityName: string;
+  units: {
+    temperature: string,
+    windSpeed: string,
+    precipitation: string
+  }
 };
 
 export const WeatherReport: React.FC<WeatherReportProps> = ({
   latitude,
   longitude,
   cityName,
+  units
 }) => {
   return (
     <div className="weather-report">
@@ -22,11 +28,12 @@ export const WeatherReport: React.FC<WeatherReportProps> = ({
           latitude={latitude}
           longitude={longitude}
           cityName={cityName}
+          units={units}
         />
-        <DailyForecasts latitude={latitude} longitude={longitude} />
+        <DailyForecasts latitude={latitude} longitude={longitude} units={units} />
       </div>
       <div>
-        <HourlyForecasts latitude={latitude} longitude={longitude} />
+        <HourlyForecasts latitude={latitude} longitude={longitude} units={units} />
       </div>
     </div>
   );

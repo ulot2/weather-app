@@ -41,15 +41,19 @@ const unitCategories: UnitCategory[] = [
   },
 ];
 
-export const Header = () => {
+type Units = {
+  selectedUnits: {
+    temperature: string,
+    windSpeed: string,
+    precipitation: string
+  }
+};
+
+export const Header: React.FC<Units> = ({selectedUnits, onUnitsChange}) => {
   const [isUnitsDropdownOpen, setIsUnitsDropdownOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const [selectedUnits, setSelectedUnits] = useState({
-    temperature: "celsius",
-    windSpeed: "kmh",
-    precipitation: "mm",
-  });
+ 
 
   const toggleDropdown = () => {
     if (isUnitsDropdownOpen) {
@@ -64,14 +68,17 @@ export const Header = () => {
   };
 
   const handleUnitSelection = (categoryId: string, optionValue: string) => {
-    setSelectedUnits((prev) => ({
-      ...prev,
-      [categoryId]: optionValue,
-    }));
+  // Create the updated units object
+  const updatedUnits = {
+    ...selectedUnits,
+    [categoryId]: optionValue, 
   };
+  
+  onUnitsChange(updatedUnits); 
+};
 
   const switchToImperial = () => {
-    setSelectedUnits({
+    onUnitsChange({
       temperature: "fahrenheit",
       windSpeed: "mph",
       precipitation: "in",

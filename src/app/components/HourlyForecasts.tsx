@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import "@/app/styles/HourlyForecasts.css";
-import { getDailyHourlyForecastData, transformHourlyData } from "@/utils/weather";
+import { getWeatherData, transformHourlyData } from "@/utils/weather";
 
 interface HourlyForecastItem {
   id: string;
@@ -16,13 +16,18 @@ interface HourlyForecastsProps {
   forecasts?: HourlyForecastItem[];
   latitude:number;
   longitude:number;
+  units: {
+    temperature: string,
+    windSpeed: string,
+    precipitation: string
+  }
 }
 
 export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
   title = "Hourly forecast",
   selectedDay = "Tuesday",
   forecasts,
-  latitude, longitude
+  latitude, longitude, units
 }) => {
   type WeatherApiResponse = {
     hourly?: {
@@ -68,7 +73,7 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
       
       try {
         setLoading(true)
-        const data = await getDailyHourlyForecastData(latitude, longitude);
+        const data = await getWeatherData(latitude, longitude, units);
         setHourlyForecastData(data)
         setError(null)
       } catch (error) {
@@ -79,7 +84,7 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
       }
     };
     getHourlyForecastData()
-  }, [latitude, longitude]); // Use optional chaining
+  }, [latitude, longitude, units]); // Use optional chaining
 
   const getDateForDay = (dayName: string) => {
     if (!hourlyForecastData?.hourly?.time) return null;

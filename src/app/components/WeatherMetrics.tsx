@@ -12,21 +12,19 @@ type Metric = {
   unit?: string;
 };
 
-type LocationData = {
-  latitude: number;
-  longitude: number;
-  name: string;
-  country: string;
-};
-
 type WeatherMetricsProps = {
   metrics?: Metric[];
   latitude:number;
   longitude:number;
   cityName:string;
+  units: {
+    temperature: string,
+    windSpeed: string,
+    precipitation: string
+  }
 };
 
-export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitude, longitude, cityName }) => {
+export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitude, longitude, cityName, units }) => {
   // Define the expected weather data type
   type WeatherApiResponse = {
     current?: {
@@ -47,25 +45,11 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-//   useEffect(() => {
-//     const testGeocoding = async () => {
-//       try {
-//         console.log('Testing geocoding...');
-//         const results = await searchCity('Paris');
-//         console.log('Geocoding results:', results);
-//       } catch (error) {
-//         console.error('Geocoding error:', error);
-//       }
-//     };
-    
-//     testGeocoding();
-//   }, []);
-
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         setLoading(true);
-        const data = await getWeatherData(latitude, longitude);
+        const data = await getWeatherData(latitude, longitude, units);
         setWeatherData(data);
         setError(null);
       } catch (err) {
@@ -77,7 +61,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
     };
 
     fetchWeather();
-  }, [latitude, longitude]);
+  }, [latitude, longitude, units]);
 
   const createMetricsFromAPI = (apiData: any) => {
     if (!apiData?.current) return null;
@@ -88,7 +72,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
         id: "feelsLike",
         label: "Feels like",
         value: Math.round(current.apparent_temperature || 0),
-        unit: "°",
+        unit: units.temperature === 'fahrenheit' ? '°F' : '°C'
       },
       {
         id: "humidity",
@@ -100,13 +84,13 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
         id: "wind",
         label: "Wind",
         value: Math.round(current.wind_speed_10m || 0),
-        unit: "km/h",
+        unit: units.windSpeed === 'mph' ? 'mph' : 'km/h'
       },
       {
         id: "precipitation",
         label: "Precipitation",
         value: current.precipitation || 0,
-        unit: "in",
+        unit: units.precipitation === 'in' ? 'in' : 'mm'
       },
     ];
   };

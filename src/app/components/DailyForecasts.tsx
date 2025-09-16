@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import "@/app/styles/DailyForecasts.css";
 import {
-  getDailyHourlyForecastData,
+ getWeatherData,
   transformDailyData,
 } from "@/utils/weather";
 
@@ -20,12 +20,17 @@ interface DailyForecastsProps {
   forecasts?: DailyForecastItem[];
   latitude:number;
   longitude:number;
+  units: {
+    temperature: string,
+    windSpeed: string,
+    precipitation: string
+  }
 }
 
 export const DailyForecasts: React.FC<DailyForecastsProps> = ({
   title = "Daily forecast",
   forecasts,
-  latitude, longitude
+  latitude, longitude, units
 }) => {
   type WeatherApiResponse = {
     daily?: {
@@ -45,7 +50,7 @@ export const DailyForecasts: React.FC<DailyForecastsProps> = ({
     const fetchDailyForecastData = async () => {
       try {
         setLoading(true);
-        const data = await getDailyHourlyForecastData(latitude, longitude);
+        const data = await getWeatherData(latitude, longitude, units);
         setDailyForecastData(data);
         setError(null);
       } catch (error) {
@@ -57,7 +62,7 @@ export const DailyForecasts: React.FC<DailyForecastsProps> = ({
     };
 
     fetchDailyForecastData();
-  }, [latitude, longitude]); // Use optional chaining
+  }, [latitude, longitude, units]);
 
   const defaultForecasts: DailyForecastItem[] = [
     { id: "1", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },

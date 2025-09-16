@@ -19,6 +19,12 @@ export default function Home() {
     longitude: 13.41
   });
 
+  const [selectedUnits, setSelectedUnits] = useState({
+    temperature: 'celsius',
+    windSpeed: "km/h",
+    precipitation: "mm"
+  })
+
   const handleCitySelect = (city:City) => {
     setCurrentCity({
       name: `${city.name}, ${city.country}`,
@@ -27,10 +33,17 @@ export default function Home() {
     });
   };
 
+  const handleUnitsChange = (newUnits:any) => {
+    setSelectedUnits(newUnits)
+  }
+
   return (
     <div className="general-container">
       <div className="container">
-        <Header />
+        <Header 
+          selectedUnits={selectedUnits}
+          onUnitsChange={handleUnitsChange}
+         />
         <SearchButton 
           onCitySelect={handleCitySelect}
           currentCity={currentCity.name}
@@ -39,6 +52,7 @@ export default function Home() {
           latitude={currentCity.latitude}
           longitude={currentCity.longitude}
           cityName={currentCity.name}
+          units={selectedUnits}
         />
       </div>
     </div>
