@@ -18,11 +18,14 @@ interface DailyForecastItem {
 interface DailyForecastsProps {
   title?: string;
   forecasts?: DailyForecastItem[];
+  latitude:number;
+  longitude:number;
 }
 
 export const DailyForecasts: React.FC<DailyForecastsProps> = ({
   title = "Daily forecast",
   forecasts,
+  latitude, longitude
 }) => {
   type WeatherApiResponse = {
     daily?: {
@@ -42,7 +45,7 @@ export const DailyForecasts: React.FC<DailyForecastsProps> = ({
     const fetchDailyForecastData = async () => {
       try {
         setLoading(true);
-        const data = await getDailyHourlyForecastData(52.52, 13.41);
+        const data = await getDailyHourlyForecastData(latitude, longitude);
         setDailyForecastData(data);
         setError(null);
       } catch (error) {
@@ -54,7 +57,7 @@ export const DailyForecasts: React.FC<DailyForecastsProps> = ({
     };
 
     fetchDailyForecastData();
-  }, []);
+  }, [latitude, longitude]); // Use optional chaining
 
   const defaultForecasts: DailyForecastItem[] = [
     { id: "1", day: "", iconSrc: "#", highTemp: "", lowTemp: "" },

@@ -1,31 +1,122 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import "@/app/styles/SearchButton.css"
+import { searchCity } from "@/utils/weather";
 
-// type SearchButtonProps = {
-//   value: string;
-//   onChange: (value: string) => void;
-//   onSearch: () => void;
-// };
+interface SearchButtonProps {
+  onCitySelect: (city: any) => void;
+  currentCity: string;
+}
 
-    export const SearchButton  = () => {
-//   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-//     if (e.key === 'Enter') onSearch();
-//   };
+type City = {
+  id: string | number;
+  name: string;
+  country: string;
+  admin1?: string;
+  latitude?: number;
+  longitude?: number;
+};
+
+export const SearchButton: React.FC<SearchButtonProps> = ({ 
+  onCitySelect, 
+  currentCity 
+}) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<City[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [error, setError] = useState<String | null>(null);
+
+  const handleSearch = async (e:any) => {
+    e.preventDefault();
+    
+    if (!searchTerm.trim()) {
+      setError('Please enter a city name');
+      return;
+    }
+
+    try {
+      setIsSearching(true);
+      setError(null);
+      
+      const results = await searchCity(searchTerm);
+      
+      if (results.length === 0) {
+        setError('No cities found. Try a different search term.');
+        setSearchResults([]);
+        setShowResults(false);
+      } else {
+        setSearchResults(results);
+        setShowResults(true);
+        setError(null);
+      }
+    } catch (err) {
+      setError('Failed to search for cities. Please try again.');
+      console.error('Search error:', err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleCitySelection = (city:City) => {
+    onCitySelect(city);
+    setShowResults(false);
+    setSearchTerm('');
+    setSearchResults([]);
+  };
+
+  const handleInputChange = (e:any) => {
+    setSearchTerm(e.target.value);
+    if (error) setError(null); // Clear error when user starts typing
+  };
 
   return (
-    <div className='search-container'>
-        <h1>How's the sky looking today?</h1>
-        <div className="search-input">
-            <div className='search'>
-                <img src="/images/icon-search.svg" alt="icon-search" />
-                <input 
-                  type="search"
-                  placeholder='Search for a place...'
-                  
-                />
+    <>   
+      <div className='search-container'>
+          <h1>How's the sky looking today?</h1>
+          
+          <form onSubmit={handleSearch} className="search-input">
+              <div className='search'>
+                  <img src="/images/icon-search.svg" alt="icon-search" />
+                  <input 
+                    type="search" 
+                    value={searchTerm}
+                    onChange={handleInputChange}
+                    placeholder='Search for a place...'
+                    disabled={isSearching}
+                  />
+              </div>
+              <button type="submit" disabled={isSearching}>
+                Search
+              </button>
+          </form>
+
+          {isSearching && <div className='searching-state'>
+            <img src="/images/icon-loading.svg" alt="icon-loading" />
+            <span>Search in progress</span>
+          </div> }
+
+          {error && (
+            <p>
+              {error}
+            </p>
+          )}
+
+          {showResults && (
+            <div className="search-results">
+              {searchResults.map((city) => (
+                <button
+                  key={`${city.id}-${city.country}`}
+                  onClick={() => handleCitySelection(city)}
+                  className="city-result"
+                >
+                  <strong>{city.name}</strong>
+                  <span>{city.country}{city.admin1 ? `, ${city.admin1}` : ''}</span>
+                </button>
+              ))}
             </div>
-            <button type="button">Search</button>
-        </div>
-    </div>
+          )}
+      </div>
+    </>
   )
 }

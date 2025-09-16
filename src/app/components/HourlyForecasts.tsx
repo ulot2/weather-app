@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import "@/app/styles/HourlyForecasts.css";
 import { getDailyHourlyForecastData, transformHourlyData } from "@/utils/weather";
-import { time } from "console";
 
 interface HourlyForecastItem {
   id: string;
@@ -15,12 +14,15 @@ interface HourlyForecastsProps {
   title?: string;
   selectedDay?: string;
   forecasts?: HourlyForecastItem[];
+  latitude:number;
+  longitude:number;
 }
 
 export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
   title = "Hourly forecast",
   selectedDay = "Tuesday",
-  forecasts
+  forecasts,
+  latitude, longitude
 }) => {
   type WeatherApiResponse = {
     hourly?: {
@@ -63,9 +65,10 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
 
   useEffect(() => {
     const getHourlyForecastData = async () => {
+      
       try {
         setLoading(true)
-        const data = await getDailyHourlyForecastData(52.52, 13.41);
+        const data = await getDailyHourlyForecastData(latitude, longitude);
         setHourlyForecastData(data)
         setError(null)
       } catch (error) {
@@ -76,7 +79,7 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
       }
     };
     getHourlyForecastData()
-  }, []);
+  }, [latitude, longitude]); // Use optional chaining
 
   const getDateForDay = (dayName: string) => {
     if (!hourlyForecastData?.hourly?.time) return null;

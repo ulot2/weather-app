@@ -12,11 +12,21 @@ type Metric = {
   unit?: string;
 };
 
-type WeatherMetricsProps = {
-  metrics?: Metric[];
+type LocationData = {
+  latitude: number;
+  longitude: number;
+  name: string;
+  country: string;
 };
 
-export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
+type WeatherMetricsProps = {
+  metrics?: Metric[];
+  latitude:number;
+  longitude:number;
+  cityName:string;
+};
+
+export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitude, longitude, cityName }) => {
   // Define the expected weather data type
   type WeatherApiResponse = {
     current?: {
@@ -37,25 +47,25 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const testGeocoding = async () => {
-      try {
-        console.log('Testing geocoding...');
-        const results = await searchCity('Paris');
-        console.log('Geocoding results:', results);
-      } catch (error) {
-        console.error('Geocoding error:', error);
-      }
-    };
+//   useEffect(() => {
+//     const testGeocoding = async () => {
+//       try {
+//         console.log('Testing geocoding...');
+//         const results = await searchCity('Paris');
+//         console.log('Geocoding results:', results);
+//       } catch (error) {
+//         console.error('Geocoding error:', error);
+//       }
+//     };
     
-    testGeocoding();
-  }, []);
+//     testGeocoding();
+//   }, []);
 
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         setLoading(true);
-        const data = await getWeatherData(52.52, 13.41);
+        const data = await getWeatherData(latitude, longitude);
         setWeatherData(data);
         setError(null);
       } catch (err) {
@@ -67,7 +77,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
     };
 
     fetchWeather();
-  }, []);
+  }, [latitude, longitude]);
 
   const createMetricsFromAPI = (apiData: any) => {
     if (!apiData?.current) return null;
@@ -122,7 +132,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics }) => {
     <>
       <div className="general-report">
         <div className="report-details">
-          <h3>Berlin, Germany</h3>
+          <h3>{cityName || "_"}</h3>
           <p>
             {weatherData?.current?.time
               ? new Date(weatherData.current.time).toLocaleDateString("en-US", {
