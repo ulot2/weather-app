@@ -63,7 +63,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
     fetchWeather();
   }, [latitude, longitude, units]);
 
-  const createMetricsFromAPI = (apiData: any) => {
+  const createMetricsFromAPI = (apiData: WeatherApiResponse): Metric[] | null => {
     if (!apiData?.current) return null;
 
     const current = apiData.current;

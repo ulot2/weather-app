@@ -39,7 +39,7 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
 
   const [hourlyForecastData, setHourlyForecastData] = useState<WeatherApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
