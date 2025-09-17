@@ -102,3 +102,19 @@
 .forecasts-day img {
     width: 40px;
 }
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 767px) {
+    .hourly-forecasts {
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+}
+
+/* TABLET */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .hourly-forecasts {
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+}

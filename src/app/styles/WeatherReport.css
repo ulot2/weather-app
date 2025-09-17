@@ -11,3 +11,10 @@
         flex-direction: column;
     }
 }
+
+/* TABLET */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .weather-report {
+        flex-direction: column;
+    }
+}

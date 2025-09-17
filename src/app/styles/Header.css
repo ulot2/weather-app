@@ -91,4 +91,19 @@ hr {
   border-top: 1px solid hsl(243, 23%, 24%);
   margin: 0.3rem 0;
   width: 90%;
-  margin: 0 auto;}
+  margin: 0 auto;
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 767px) {
+  .units-dropdown-content {
+    right: 15;
+  }
+}
+
+/* TABLET */
+@media (min-width: 601px) and (max-width: 1024px) {
+ .units-dropdown-content {
+  right: 15;
+ }
+}
