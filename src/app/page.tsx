@@ -5,11 +5,17 @@ import { Header } from "./components/Header";
 import { SearchButton } from "./components/SearchButton";
 import { WeatherReport } from "./components/WeatherReport";
 
-type City = {
-  latitude: number;
-  longitude: number;
+type Cityy = {
+  latitude?: number;
+  longitude?: number;
   name: string;
   country: string;
+};
+
+type UnitSelection = {
+  temperature: string;
+  windSpeed: string;
+  precipitation: string;
 };
 
 export default function Home() {
@@ -25,15 +31,15 @@ export default function Home() {
     precipitation: "mm"
   })
 
-  const handleCitySelect = (city:City) => {
+  const handleCitySelect = (city:Cityy) => {
     setCurrentCity({
       name: `${city.name}, ${city.country}`,
-      latitude: city.latitude,
-      longitude: city.longitude
+      latitude: city.latitude ?? currentCity.latitude,
+      longitude: city.longitude ?? currentCity.longitude
     });
   };
 
-  const handleUnitsChange = (newUnits:any) => {
+  const handleUnitsChange = (newUnits:UnitSelection) => {
     setSelectedUnits(newUnits)
   }
 

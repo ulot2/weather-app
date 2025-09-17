@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import "@/app/styles/Header.css";
 
 interface UnitOption {
@@ -41,13 +41,15 @@ const unitCategories: UnitCategory[] = [
   },
 ];
 
+type UnitSelection = {
+  temperature: string;
+  windSpeed: string;
+  precipitation: string;
+};
+
 type Units = {
-  selectedUnits: {
-    temperature: string,
-    windSpeed: string,
-    precipitation: string
-  }
-  onUnitsChange: any
+  selectedUnits: UnitSelection;
+  onUnitsChange: (units: UnitSelection) => void;
 };
 
 export const Header: React.FC<Units> = ({selectedUnits, onUnitsChange}) => {

@@ -44,7 +44,7 @@ export const DailyForecasts: React.FC<DailyForecastsProps> = ({
   const [dailyForecastData, setDailyForecastData] =
     useState<WeatherApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDailyForecastData = async () => {
@@ -101,6 +101,12 @@ export const DailyForecasts: React.FC<DailyForecastsProps> = ({
           </div>
         ))}
       </div>
+      {error && (
+            <p
+            >
+              {error}
+            </p>
+          )}
     </div>
   );
 };

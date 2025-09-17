@@ -4,7 +4,7 @@ import "@/app/styles/SearchButton.css"
 import { searchCity } from "@/utils/weather";
 
 interface SearchButtonProps {
-  onCitySelect: (city: any) => void;
+  onCitySelect: (city:City) => void;
   currentCity: string;
 }
 
@@ -25,9 +25,9 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
   const [searchResults, setSearchResults] = useState<City[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = async (e:any) => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!searchTerm.trim()) {
@@ -65,7 +65,7 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
     setSearchResults([]);
   };
 
-  const handleInputChange = (e:any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     if (error) setError(null); // Clear error when user starts typing
   };
@@ -73,7 +73,7 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
   return (
     <>   
       <div className='search-container'>
-          <h1>How's the sky looking today?</h1>
+          <h1>{"How's the sky looking today?"}</h1>
           
           <form onSubmit={handleSearch} className="search-input">
               <div className='search'>
