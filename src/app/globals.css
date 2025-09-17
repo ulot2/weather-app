@@ -20,3 +20,29 @@ body {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+
+.loading-location {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 10px;
+}
+
+.loading-location img {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-location p {
+  color: #fff;
+  font-size: 1.5rem;
+}

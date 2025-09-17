@@ -1,11 +1,24 @@
+"use client"
+
+export type Units = {
+  temperature: string,
+  windSpeed: string,
+  precipitation: string
+}
+
+export type City = {
+  id: string | number;
+  name: string;
+  country: string;
+  admin1?: string;
+  latitude?: number;
+  longitude?: number;
+};
+
 export async function getWeatherData(
   latitude: number,
   longitude: number,
-  units: {
-    temperature: string,
-    windSpeed: string,
-    precipitation: string
-  }
+  units: Units
 ) {
   try {
     const temperatureUnit = units.temperature === "fahrenheit" ? "fahrenheit" : "celsius";
@@ -24,11 +37,7 @@ export async function getWeatherData(
   }
 }
 
-type Units = {
-  temperature: string,
-    windSpeed: string,
-    precipitation: string,
-};
+// Keep only the exported Units above; remove duplicate local declaration
 
 export function getTemperatureUnit(units:Units) {
   return units.temperature === 'fahrenheit' ? '°F' : '°C';
@@ -147,7 +156,7 @@ export async function searchCity(cityName: string) {
     )}&count=5&language=en&format=json`;
 
     const response = await fetch(url);
-    const data = await response.json();
+    const data: { results?: City[] } = await response.json();
 
     console.log("Geocoding response", data);
 
@@ -155,5 +164,34 @@ export async function searchCity(cityName: string) {
   } catch (error) {
     console.error("Error searching:", error);
     throw error;
+  }
+}
+
+export async function reverseGeocode(latitude: number, longitude: number): Promise<string> {
+  try {
+    // Using BigDataCloud's free reverse geocoding API
+    const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error('Reverse geocoding failed');
+    }
+    
+    const data = await response.json();
+    
+    console.log('Reverse geocoding result:', data); // Debug log
+    
+    if (data) {
+      const city = data.city || data.locality || data.principalSubdivision || 'Unknown City';
+      const country = data.countryName || 'Unknown Country';
+      
+      return `${city}, ${country}`;
+    } else {
+      return `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+    }
+  } catch (error) {
+    console.error('Reverse geocoding error:', error);
+    return `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
   }
 }

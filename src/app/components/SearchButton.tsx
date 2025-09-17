@@ -1,21 +1,12 @@
 "use client"
 import React, { useState } from 'react'
 import "@/app/styles/SearchButton.css"
-import { searchCity } from "@/utils/weather";
+import { searchCity, type City } from "@/utils/weather";
 
 interface SearchButtonProps {
-  onCitySelect: (city:City) => void;
+  onCitySelect: (city: City) => void;
   currentCity: string;
 }
-
-type City = {
-  id: string | number;
-  name: string;
-  country: string;
-  admin1?: string;
-  latitude?: number;
-  longitude?: number;
-};
 
 export const SearchButton: React.FC<SearchButtonProps> = ({ 
   onCitySelect, 
@@ -97,7 +88,8 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
           </div> }
 
           {error && (
-            <p>
+            <p className='input-error'>
+              <img src="/images/icon-error.svg" alt="icon-error" />
               {error}
             </p>
           )}

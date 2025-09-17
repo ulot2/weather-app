@@ -119,6 +119,14 @@ input[type="search"]::-moz-search-clear {
   border-radius: 8px;
 }
 
+.input-error {
+  color: #fff;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 .city-result {
   display: flex;
   justify-content: start;
@@ -185,5 +193,12 @@ span {
     left: 10;
     width: 90%;
     margin-left: 8px;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .searching-state {
+    left: 187;
+    margin-left: 0.5rem;
   }
 }

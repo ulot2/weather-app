@@ -14,17 +14,23 @@ type Metric = {
 
 type WeatherMetricsProps = {
   metrics?: Metric[];
-  latitude:number;
-  longitude:number;
-  cityName:string;
+  latitude: number;
+  longitude: number;
+  cityName: string;
   units: {
-    temperature: string,
-    windSpeed: string,
-    precipitation: string
-  }
+    temperature: string;
+    windSpeed: string;
+    precipitation: string;
+  };
 };
 
-export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitude, longitude, cityName, units }) => {
+export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({
+  metrics,
+  latitude,
+  longitude,
+  cityName,
+  units,
+}) => {
   // Define the expected weather data type
   type WeatherApiResponse = {
     current?: {
@@ -63,7 +69,9 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
     fetchWeather();
   }, [latitude, longitude, units]);
 
-  const createMetricsFromAPI = (apiData: WeatherApiResponse): Metric[] | null => {
+  const createMetricsFromAPI = (
+    apiData: WeatherApiResponse
+  ): Metric[] | null => {
     if (!apiData?.current) return null;
 
     const current = apiData.current;
@@ -72,7 +80,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
         id: "feelsLike",
         label: "Feels like",
         value: Math.round(current.apparent_temperature || 0),
-        unit: units.temperature === 'fahrenheit' ? '°F' : '°C'
+        unit: units.temperature === "fahrenheit" ? "°F" : "°C",
       },
       {
         id: "humidity",
@@ -84,13 +92,13 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
         id: "wind",
         label: "Wind",
         value: Math.round(current.wind_speed_10m || 0),
-        unit: units.windSpeed === 'mph' ? 'mph' : 'km/h'
+        unit: units.windSpeed === "mph" ? "mph" : "km/h",
       },
       {
         id: "precipitation",
         label: "Precipitation",
         value: current.precipitation || 0,
-        unit: units.precipitation === 'in' ? 'in' : 'mm'
+        unit: units.precipitation === "in" ? "in" : "mm",
       },
     ];
   };
@@ -114,50 +122,53 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({ metrics, latitud
 
   return (
     <>
-      <div className="general-report">
-        <div className="report-details">
-          <h3>{cityName || "_"}</h3>
-          <p>
-            {weatherData?.current?.time
-              ? new Date(weatherData.current.time).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              : "_"}
-          </p>
-          {/* {loading && (
-            <p style={{ fontSize: "0.8rem", marginTop: "0.5rem" }}>
-              Loading...
-            </p>
-          )}
-          {error && (
-            <p
-              style={{ fontSize: "0.8rem", marginTop: "0.5rem", color: "red" }}
-            >
-              {error}
-            </p>
-          )} */}
+      {loading ? (
+        <div className="report-details-loading">
+          <div className="loading-report">
+            <span>.</span>
+            <span>.</span>
+            <span>.</span>
+          </div>
+          <p>Loading</p>
         </div>
-        <div className="weather-degree">
-          <img
-            src={`/images/${
-              weatherData?.current?.weather_code
-                ? getWeatherIcon(weatherData.current.weather_code)
-                : "icon-sunny.webp"
-            }`}
-            alt="current weather"
-          />
-          <h1>
-            {loading
-              ? "..."
-              : weatherData?.current?.temperature_2m
-              ? `${Math.round(weatherData.current.temperature_2m)}°`
-              : "_"}
-          </h1>
+      ) : (
+        <div className="general-report">
+          <div className="report-details">
+            <h3>{cityName || "_"}</h3>
+            <p>
+              {weatherData?.current?.time
+                ? new Date(weatherData.current.time).toLocaleDateString(
+                    "en-US",
+                    {
+                      weekday: "long",
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    }
+                  )
+                : "_"}
+            </p>
+            {error && <p>{error}</p>}
+          </div>
+          <div className="weather-degree">
+            <img
+              src={`/images/${
+                weatherData?.current?.weather_code
+                  ? getWeatherIcon(weatherData.current.weather_code)
+                  : "icon-sunny.webp"
+              }`}
+              alt="current weather"
+            />
+            <h1>
+              {loading
+                ? "..."
+                : weatherData?.current?.temperature_2m
+                ? `${Math.round(weatherData.current.temperature_2m)}°`
+                : "_"}
+            </h1>
+          </div>
         </div>
-      </div>
+      )}
       <div className="metrics">
         {metricsToRender?.map((metric) => (
           <div className="metrics-details" key={metric.id}>
