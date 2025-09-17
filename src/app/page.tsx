@@ -27,10 +27,9 @@ export default function Home() {
     error: locationError,
   } = useGeolocation();
 
-  // no default city — null means "no current city selected / no automatic location"
+
   const [currentCity, setCurrentCity] = useState<Cityy>(null);
 
-  // ensure we only set initial location once from geolocation
   const [initialLocationSet, setInitialLocationSet] = useState(false);
 
   const [selectedUnits, setSelectedUnits] = useState<UnitSelection>({
@@ -41,7 +40,7 @@ export default function Home() {
 
   useEffect(() => {
     const setUserLocation = async () => {
-      // only set when we actually have a userLocation and haven't set initially
+    
       if (userLocation && !initialLocationSet && !locationError) {
         try {
           const cityName = await reverseGeocode(
@@ -52,10 +51,10 @@ export default function Home() {
             name: cityName,
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
-            country: "", // optional, set if reverseGeocode returns it
+            country: "",
           });
         } catch (err) {
-          // fallback to coords-only name if reverse geocode fails
+          
           setCurrentCity({
             name: `${userLocation.latitude.toFixed(
               2
@@ -69,10 +68,10 @@ export default function Home() {
         }
       }
 
-      // If locationError (user denied), mark initialLocationSet so we stop waiting
+ 
       if (locationError && !initialLocationSet) {
         setInitialLocationSet(true);
-        // DO NOT set a default city — remain null so only Header + SearchButton show
+      
       }
     };
 
@@ -80,7 +79,7 @@ export default function Home() {
   }, [userLocation, locationError, initialLocationSet]);
 
   const handleCitySelect = (city: NonNullable<Cityy>) => {
-    // user selecting a city should set currentCity
+  
     setCurrentCity({
       name: `${city.name}, ${city.country}`,
       latitude: city.latitude,
@@ -98,10 +97,8 @@ export default function Home() {
       <div className="container">
         <Header selectedUnits={selectedUnits} onUnitsChange={handleUnitsChange} />
 
-        {/* pass current city name if available, otherwise empty string */}
         <SearchButton onCitySelect={handleCitySelect} currentCity={currentCity?.name ?? ""} />
 
-        {/* Show loading while geolocation is in progress */}
         {locationLoading && (
           <div className="loading-location">
             <img src="/images/icon-loading.svg" alt="icon-loading" />
@@ -109,9 +106,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* If we have valid coords, show WeatherReport.
-            If user denied location (locationError), currentCity will be null
-            — so nothing else renders (only Header + SearchButton remain). */}
+        
         {!locationLoading &&
           currentCity &&
           currentCity.latitude != null &&

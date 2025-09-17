@@ -9,8 +9,7 @@ interface SearchButtonProps {
 }
 
 export const SearchButton: React.FC<SearchButtonProps> = ({ 
-  onCitySelect, 
-  currentCity 
+  onCitySelect 
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<City[]>([]);
@@ -58,7 +57,7 @@ export const SearchButton: React.FC<SearchButtonProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    if (error) setError(null); // Clear error when user starts typing
+    if (error) setError(null);
   };
 
   return (
