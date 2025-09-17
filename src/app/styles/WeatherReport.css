@@ -4,3 +4,10 @@
     gap: 4%;
     margin-top: 1.5rem;
 }
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 767px) {
+    .weather-report {
+        flex-direction: column;
+    }
+}

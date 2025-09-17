@@ -47,6 +47,7 @@ type Units = {
     windSpeed: string,
     precipitation: string
   }
+  onUnitsChange: any
 };
 
 export const Header: React.FC<Units> = ({selectedUnits, onUnitsChange}) => {
