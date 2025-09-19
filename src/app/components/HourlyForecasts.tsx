@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "@/app/styles/HourlyForecasts.css";
 import { getWeatherData, transformHourlyData } from "@/utils/weather";
 
@@ -44,6 +44,7 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentSelectedDay, setCurrentSelectedDay] = useState(selectedDay);
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -58,6 +59,22 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
       setIsDropdownOpen(true);
     }
   };
+
+  useEffect(() => {
+    function handleClickOutside (event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setIsDropdownOpen(false);
+          setIsAnimating(false);
+        }, 300);
+      } 
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const handleDaySelection = (day: string) => {
     setCurrentSelectedDay(day);
@@ -84,7 +101,7 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
       }
     };
     getHourlyForecastData()
-  }, [latitude, longitude, units]); // Use optional chaining
+  }, [latitude, longitude, units]);
 
   const getDateForDay = (dayName: string) => {
     if (!hourlyForecastData?.hourly?.time) return null;
@@ -130,8 +147,8 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
     <div className="hourly-forecasts">
       <div className="hourly-forecasts-header">
         <p>{title}</p>
-        <div className="days-dropdown">
-          <div className={`forecasts-dropdown-button ${isDropdownOpen ? 'open' : ''}`} onClick={toggleDropdown}>
+        <div className="days-dropdown" ref={dropdownRef}>
+          <div className={`forecasts-dropdown-button ${isDropdownOpen ? 'open' : ''}`} onClick={toggleDropdown} >
             <span>{currentSelectedDay}</span>
             <img src="/images/icon-dropdown.svg" alt="" />
           </div>

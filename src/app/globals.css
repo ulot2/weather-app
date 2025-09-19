@@ -6,6 +6,7 @@
 
 body {
   background-color: hsl(243, 96%, 9%);
+  overflow: hidden;
 }
 
 .general-container {

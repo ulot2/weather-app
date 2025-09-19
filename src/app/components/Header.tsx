@@ -1,5 +1,5 @@
 "use client";
-import React, { useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "@/app/styles/Header.css";
 
 interface UnitOption {
@@ -52,11 +52,10 @@ type Units = {
   onUnitsChange: (units: UnitSelection) => void;
 };
 
-export const Header: React.FC<Units> = ({selectedUnits, onUnitsChange}) => {
+export const Header: React.FC<Units> = ({ selectedUnits, onUnitsChange }) => {
   const [isUnitsDropdownOpen, setIsUnitsDropdownOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-
- 
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const toggleDropdown = () => {
     if (isUnitsDropdownOpen) {
@@ -70,15 +69,36 @@ export const Header: React.FC<Units> = ({selectedUnits, onUnitsChange}) => {
     }
   };
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (event.target instanceof Node) {
+        if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setIsUnitsDropdownOpen(false);
+          setIsAnimating(false);
+        }, 300);
+      }
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleUnitSelection = (categoryId: string, optionValue: string) => {
-  // Create the updated units object
-  const updatedUnits = {
-    ...selectedUnits,
-    [categoryId]: optionValue, 
+    const updatedUnits = {
+      ...selectedUnits,
+      [categoryId]: optionValue,
+    };
+
+    onUnitsChange(updatedUnits);
   };
-  
-  onUnitsChange(updatedUnits); 
-};
 
   const switchToImperial = () => {
     onUnitsChange({
@@ -86,6 +106,7 @@ export const Header: React.FC<Units> = ({selectedUnits, onUnitsChange}) => {
       windSpeed: "mph",
       precipitation: "in",
     });
+    setIsUnitsDropdownOpen(false);
   };
 
   return (
@@ -93,7 +114,7 @@ export const Header: React.FC<Units> = ({selectedUnits, onUnitsChange}) => {
       <div className="logo-container">
         <img src="/images/logo.svg" alt="logo" className="logo-image" />
       </div>
-      <div className="unit-dropdown">
+      <div className="unit-dropdown" ref={dropdownRef}>
         <div
           className={`units-dropdown-button ${
             isUnitsDropdownOpen ? "open" : ""
