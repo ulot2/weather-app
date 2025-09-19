@@ -80,7 +80,6 @@
 
 .metrics {
   display: flex;
-  /* justify-content: sac; */
   gap: 2%;
   margin-top: 0.7rem;
   flex-wrap: wrap;

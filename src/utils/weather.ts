@@ -37,8 +37,6 @@ export async function getWeatherData(
   }
 }
 
-// Keep only the exported Units above; remove duplicate local declaration
-
 export function getTemperatureUnit(units:Units) {
   return units.temperature === 'fahrenheit' ? '°F' : '°C';
 }
@@ -57,27 +55,27 @@ export function formatTemperature(temp:number, units:Units) {
 }
 
 export const weatherCodeToIcon: Record<number, string> = {
-  0: "icon-sunny.webp", // Clear sky
-  1: "icon-partly-cloudy.webp", // Mainly clear
-  2: "icon-partly-cloudy.webp", // Partly cloudy
-  3: "icon-overcast.webp", // Overcast
-  45: "icon-fog.webp", // Fog
-  48: "icon-fog.webp", // Depositing rime fog
-  51: "icon-drizzle.webp", // Light drizzle
-  53: "icon-drizzle.webp", // Moderate drizzle
-  55: "icon-drizzle.webp", // Dense drizzle
-  61: "icon-rain.webp", // Light rain
-  63: "icon-rain.webp", // Moderate rain
-  65: "icon-rain.webp", // Heavy rain
-  71: "icon-snow.webp", // Light snow
-  73: "icon-snow.webp", // Moderate snow
-  75: "icon-snow.webp", // Heavy snow
-  80: "icon-rain.webp", // Light rain showers
-  81: "icon-rain.webp", // Moderate rain showers
-  82: "icon-rain.webp", // Violent rain showers
-  95: "icon-storm.webp", // Thunderstorm
-  96: "icon-storm.webp", // Thunderstorm with light hail
-  99: "icon-storm.webp", // Thunderstorm with heavy hail
+  0: "icon-sunny.webp",
+  1: "icon-partly-cloudy.webp",
+  2: "icon-partly-cloudy.webp",
+  3: "icon-overcast.webp", 
+  45: "icon-fog.webp",
+  48: "icon-fog.webp", 
+  51: "icon-drizzle.webp", 
+  53: "icon-drizzle.webp", 
+  55: "icon-drizzle.webp", 
+  61: "icon-rain.webp", 
+  63: "icon-rain.webp",
+  65: "icon-rain.webp", 
+  71: "icon-snow.webp", 
+  73: "icon-snow.webp", 
+  75: "icon-snow.webp", 
+  80: "icon-rain.webp", 
+  81: "icon-rain.webp", 
+  82: "icon-rain.webp", 
+  95: "icon-storm.webp", 
+  96: "icon-storm.webp", 
+  99: "icon-storm.webp", 
 };
 
 export function getWeatherIcon(weatherCode: number) {
@@ -169,7 +167,7 @@ export async function searchCity(cityName: string) {
 
 export async function reverseGeocode(latitude: number, longitude: number): Promise<string> {
   try {
-    // Using BigDataCloud's free reverse geocoding API
+
     const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
     
     const response = await fetch(url);
@@ -179,8 +177,6 @@ export async function reverseGeocode(latitude: number, longitude: number): Promi
     }
     
     const data = await response.json();
-    
-    console.log('Reverse geocoding result:', data); // Debug log
     
     if (data) {
       const city = data.city || data.locality || data.principalSubdivision || 'Unknown City';

@@ -8,7 +8,7 @@ import { searchCity } from "@/utils/weather";
 type Metric = {
   id: string;
   label: string;
-  value: string | number;
+  value: string | number
   unit?: string;
 };
 
@@ -31,7 +31,7 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({
   cityName,
   units,
 }) => {
-  // Define the expected weather data type
+  
   type WeatherApiResponse = {
     current?: {
       temperature_2m?: number;
@@ -44,7 +44,6 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({
     };
   };
 
-  // State for weather data
   const [weatherData, setWeatherData] = useState<WeatherApiResponse | null>(
     null
   );
@@ -110,7 +109,6 @@ export const WeatherMetrics: React.FC<WeatherMetricsProps> = ({
     { id: "precipitation", label: "Precipitation", value: "_", unit: "" },
   ];
 
-  //   deciding what metrics to show
   let metricsToRender;
   if (metrics) {
     metricsToRender = metrics;
