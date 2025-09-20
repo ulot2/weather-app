@@ -1,16 +1,21 @@
 .search-container {
-  text-align: center;
   margin-top: 0.1rem;
 }
 
 .search-container h1 {
   color: #fff;
   margin-bottom: 1rem;
+  text-align: center;
+}
+
+.blahh {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .search-input {
   display: flex;
-  justify-content: center;
   gap: 2%;
 }
 
@@ -83,16 +88,14 @@ input[type="search"]::-moz-search-clear {
 
 .searching-state {
   background-color: hsl(243, 27%, 20%);
-  width: 300px;
+  width: 295px;
   margin-top: 0.5rem;
-  position: absolute;
-  left: 440;
-  text-align: left;
   padding: 0.5rem;
   border-radius: 8px;
   display: flex;
   gap: 8px;
   align-items: center;
+  margin-right: 4.4rem;
 }
 
 .searching-state img {
@@ -111,11 +114,9 @@ input[type="search"]::-moz-search-clear {
 .search-results {
   background-color: hsl(243, 27%, 20%);
   width: 300px;
-  margin: 0 auto;
   margin-top: 0.5rem;
-  position: absolute;
-  left: 440;
   border-radius: 8px;
+  margin-right: 4.4rem;
 }
 
 .input-error {
@@ -183,22 +184,17 @@ span {
   }
 
   .searching-state {
-    left: 10;
-    width: 90%;
-    margin-left: 0.5rem;
+    margin: 0.5rem auto 0 auto; 
   }
 
   .search-results {
-    left: 10;
-    width: 90%;
-    margin-left: 8px;
+    margin: 0.5rem auto 0 auto; 
   }
 }
 
 /* TABLET */
 @media (min-width: 601px) and (max-width: 1024px) {
   .searching-state {
-    left: 187;
     margin-left: 0.5rem;
   }
 }

@@ -28,12 +28,16 @@
   transform: rotate(180deg);
 }
 
+.unit-dropdown {
+  position: relative;
+}
+
 .units-dropdown-content {
   position: absolute;
   background-color: hsl(243, 27%, 20%);
-  right: 150;
+  right: 0;
+  top: 100%;
   border-radius: 0.6rem;
-  margin-top: 0.5rem;
   padding-top: 0.6rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -97,13 +101,15 @@ hr {
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 767px) {
   .units-dropdown-content {
-    right: 15;
+    right: 0;
+    width: 12rem;
   }
 }
 
 /* TABLET */
 @media (min-width: 601px) and (max-width: 1024px) {
  .units-dropdown-content {
-  right: 15;
+  right: 0;
+  width: 11rem;
  }
 }
