@@ -109,12 +109,35 @@
     background-image: url("/images/bg-today-small.svg");
     width: 100%;
     height: 15rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
   }
 
   .report-details-loading {
     width: 100%;
     height: 15rem;
   }
+
+  .report-details {
+    text-align: center;
+  }
+
+  .report-details h3 {
+    font-size: 2rem;
+  }
+
+  .weather-degree {
+    gap: 2rem;
+  }
+
+  .weather-degree h1 {
+    font-size: 4rem;
+  }
+
+  .weather-degree img {
+  width: 80px;
+}
 
   .metrics-details {
   width: 49%;

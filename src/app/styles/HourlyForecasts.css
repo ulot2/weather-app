@@ -26,6 +26,10 @@
     cursor: pointer;
 }
 
+.forecasts-dropdown-button:hover {
+  background-color: hsl(243, 27%, 30%);
+}
+
 .forecasts-dropdown-button img {
     margin-left: 0.4rem;
     width: 10px;

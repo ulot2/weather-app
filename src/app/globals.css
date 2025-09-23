@@ -48,6 +48,25 @@ body {
   font-size: 1.5rem;
 }
 
+.no-location {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.no-location img {
+  width: 200px;
+}
+
+.no-location p {
+  color: #fff;
+  font-size: 1rem;
+  margin-top: 1rem; 
+  opacity: 0.7;
+}
+
 @media (max-width: 767px) {
   body {
     overflow: scroll;

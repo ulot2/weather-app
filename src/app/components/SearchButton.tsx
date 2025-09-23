@@ -40,7 +40,6 @@ export const SearchButton: React.FC<SearchButtonProps> = ({ onCitySelect }) => {
       }
     } catch (err) {
       setError("Failed to search for cities. Please try again.");
-      console.error("Search error:", err);
     } finally {
       setIsSearching(false);
     }

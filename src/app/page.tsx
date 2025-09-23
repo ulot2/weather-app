@@ -27,20 +27,50 @@ export default function Home() {
     error: locationError,
   } = useGeolocation();
 
-
   const [currentCity, setCurrentCity] = useState<Cityy>(null);
-
   const [initialLocationSet, setInitialLocationSet] = useState(false);
-
   const [selectedUnits, setSelectedUnits] = useState<UnitSelection>({
     temperature: "celsius",
     windSpeed: "km/h",
     precipitation: "mm",
   });
 
+   useEffect(() => {
+    const savedCity = localStorage.getItem('weatherAppCurrentCity');
+    const savedUnits = localStorage.getItem('weatherAppUnits');
+
+    if (savedUnits) {
+      try {
+        setSelectedUnits(JSON.parse(savedUnits));
+      } catch (error) {
+        console.error('Failed to parse saved units:', error);
+      }
+    }
+
+    if (savedCity) {
+      try {
+        const cityData = JSON.parse(savedCity);
+        setCurrentCity(cityData);
+        setInitialLocationSet(true);
+        return;
+      } catch (error) {
+        console.error('Failed to parse saved city:', error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (initialLocationSet) {
+      localStorage.setItem('weatherAppCurrentCity', JSON.stringify(currentCity));
+    }
+  }, [currentCity, initialLocationSet]);
+
+  useEffect(() => {
+    localStorage.setItem('weatherAppUnits', JSON.stringify(selectedUnits));
+  }, [selectedUnits]);
+
   useEffect(() => {
     const setUserLocation = async () => {
-    
       if (userLocation && !initialLocationSet && !locationError) {
         try {
           const cityName = await reverseGeocode(
@@ -54,7 +84,6 @@ export default function Home() {
             country: "",
           });
         } catch (err) {
-          
           setCurrentCity({
             name: `${userLocation.latitude.toFixed(
               2
@@ -68,10 +97,8 @@ export default function Home() {
         }
       }
 
- 
       if (locationError && !initialLocationSet) {
         setInitialLocationSet(true);
-      
       }
     };
 
@@ -79,7 +106,6 @@ export default function Home() {
   }, [userLocation, locationError, initialLocationSet]);
 
   const handleCitySelect = (city: NonNullable<Cityy>) => {
-  
     setCurrentCity({
       name: `${city.name}, ${city.country}`,
       latitude: city.latitude,
@@ -95,9 +121,15 @@ export default function Home() {
   return (
     <div className="general-container">
       <div className="container">
-        <Header selectedUnits={selectedUnits} onUnitsChange={handleUnitsChange} />
+        <Header
+          selectedUnits={selectedUnits}
+          onUnitsChange={handleUnitsChange}
+        />
 
-        <SearchButton onCitySelect={handleCitySelect} currentCity={currentCity?.name ?? ""} />
+        <SearchButton
+          onCitySelect={handleCitySelect}
+          currentCity={currentCity?.name ?? ""}
+        />
 
         {locationLoading && (
           <div className="loading-location">
@@ -106,18 +138,22 @@ export default function Home() {
           </div>
         )}
 
-        
         {!locationLoading &&
-          currentCity &&
-          currentCity.latitude != null &&
-          currentCity.longitude != null && (
-            <WeatherReport
-              latitude={currentCity.latitude}
-              longitude={currentCity.longitude}
-              cityName={currentCity.name}
-              units={selectedUnits}
-            />
-          )}
+        currentCity &&
+        currentCity.latitude != null &&
+        currentCity.longitude != null ? (
+          <WeatherReport
+            latitude={currentCity.latitude}
+            longitude={currentCity.longitude}
+            cityName={currentCity.name}
+            units={selectedUnits}
+          />
+        ) : (
+          <div className="no-location">
+            <img src="/images/icon-partly-cloudy.webp" alt="icon-partly-cloudy" />
+            <p>Enter your location to get the weather report</p>
+          </div>
+        )}
       </div>
     </div>
   );
