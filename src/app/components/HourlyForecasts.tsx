@@ -25,7 +25,7 @@ interface HourlyForecastsProps {
 
 export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
   title = "Hourly forecast",
-  selectedDay = "Tuesday",
+  selectedDay,
   forecasts,
   latitude, longitude, units
 }) => {
@@ -43,10 +43,14 @@ export const HourlyForecasts: React.FC<HourlyForecastsProps> = ({
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [currentSelectedDay, setCurrentSelectedDay] = useState(selectedDay);
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+  const today = new Date();
+  const currentDay = days[today.getDay()];
+
+  const [currentSelectedDay, setCurrentSelectedDay] = useState(selectedDay || currentDay);
 
   const toggleDropdown = () => {
     if (isDropdownOpen) {

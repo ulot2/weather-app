@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/styles/SearchButton.css";
 import { searchCity, type City } from "@/utils/weather";
 
@@ -14,13 +14,15 @@ export const SearchButton: React.FC<SearchButtonProps> = ({ onCitySelect }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!searchTerm.trim()) {
+      const timer = setTimeout(() => setError(null), 3000);
       setError("Please enter a city name");
-      return;
+      return () => clearTimeout(timer);
     }
 
     try {
@@ -30,16 +32,20 @@ export const SearchButton: React.FC<SearchButtonProps> = ({ onCitySelect }) => {
       const results = await searchCity(searchTerm);
 
       if (results.length === 0) {
+        const timer = setTimeout(() => setError(null), 3000);
         setError("No cities found. Try a different search term.");
         setSearchResults([]);
         setShowResults(false);
+        return () => clearTimeout(timer);
       } else {
         setSearchResults(results);
         setShowResults(true);
         setError(null);
       }
     } catch (err) {
+      const timer = setTimeout(() => setError(null), 3000);
       setError("Failed to search for cities. Please try again.");
+      return () => clearTimeout(timer);
     } finally {
       setIsSearching(false);
     }
@@ -56,6 +62,13 @@ export const SearchButton: React.FC<SearchButtonProps> = ({ onCitySelect }) => {
     setSearchTerm(e.target.value);
     if (error) setError(null);
   };
+
+  useEffect(() => {
+    if (status) {
+      const timer = setTimeout(() => setStatus(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   return (
     <>
